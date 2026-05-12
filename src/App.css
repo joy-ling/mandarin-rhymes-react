@@ -1,0 +1,164 @@
+:root {
+  --mid-grey: #cccccc;
+  --mid-red: #e04a4a;
+  --dark-red: #A81414;
+  --light-yellow: #fff9ed;
+  --mid-yellow: #f3d186;
+}
+
+body {
+  a {
+    color: var(--dark-red);
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  background-image: url('../src/assets/background.jpg');
+  background-size: cover;
+  background-position: center;
+
+  filter: blur(100px);
+  transform: scale(1.05);
+
+  z-index: -1;
+}
+
+main {
+  color: black;
+  padding: 3rem 1rem;
+}
+
+#root {
+  border: none;
+}
+
+.instructions {
+  margin: 1rem 0;
+}
+
+.search {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-bar {
+  font-size: 2rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--mid-grey);
+  border-radius: 2rem;
+}
+
+.search__match-and-submit {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.match-tones {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 1px solid var(--mid-grey);
+  }
+  
+}
+
+.find-rhymes {
+  background: var(--dark-red);
+  color: white;
+  font-size: 1rem;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.find-rhymes:hover {
+  filter: brightness(0.75);
+}
+
+.rhyme-list {
+  display: grid;
+  text-align: left;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0px 4px 8px 0px #00000033;
+  min-width: 600px;
+  overflow-x: scroll;
+}
+
+.header,
+.row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 0.5rem 1rem;
+}
+
+.header {
+  background: var(--mid-yellow);
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  font-weight: bold;
+}
+
+.cell-label {
+  display: none;
+}
+
+.row:nth-child(odd) {
+  background: var(--light-yellow);
+}
+
+.row:last-child {
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
+footer { 
+  padding: 3rem 1rem;
+}
+
+@media (max-width: 600px) {
+  .header {
+    display: none;
+  }
+
+  .rhyme-list {
+    display: flex;
+    flex-direction: column;
+    min-width: auto;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cell {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.75rem;
+  }
+
+  .cell-label {
+    display: block;
+    font-size: 0.75rem;
+  }
+}
