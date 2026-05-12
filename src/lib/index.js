@@ -2,7 +2,7 @@ import pinyinConvert from 'hanzi-to-pinyin';
 import zhuyin from 'zhuyin';
 import hanziFrequency from '@zurawiki/hanzi';
 import fs from 'fs';
-import crypto from 'crypto';
+import crypto from "crypto";
 
 const rhymingDictionary = JSON.parse(
   fs.readFileSync(new URL('./rhyming-dictionary.json', import.meta.url), 'utf-8')

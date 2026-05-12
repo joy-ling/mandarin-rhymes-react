@@ -15,7 +15,10 @@ export default async function handler(req, res) {
 
     res.status(200).json(result);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Something broke' });
-  }
+    console.error("RHYMES API ERROR:", err);
+    res.status(500).json({
+        error: err.message,
+        stack: err.stack
+    });
+    }
 }
