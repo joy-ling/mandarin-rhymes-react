@@ -60,19 +60,19 @@ function App() {
           {rhymes.map((r) => (
             <div className="row" key={r.id}>
               <div className="cell">
-                <span class="cell-label">Simplified</span>
+                <span className="cell-label">Simplified</span>
                 {r.simplified}
               </div>
               <div className="cell">
-                <span class="cell-label">Traditional</span>
+                <span className="cell-label">Traditional</span>
                 {r.traditional}
               </div>
               <div className="cell">
-                <span class="cell-label">Pinyin</span>
+                <span className="cell-label">Pinyin</span>
                 {r.pinyin}
               </div>
               <div className="cell">
-                <span class="cell-label">Definitions</span>
+                <span className="cell-label">Definitions</span>
                 {r.definitions}
               </div>
             </div>
