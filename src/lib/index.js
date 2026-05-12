@@ -113,8 +113,8 @@ class MandarinRhymes {
       }
     }
     this.rhymes = subDictionary.words || [];
-    this.addAverageFrequencies()
-    this.sortByFrequency();
+    // this.addAverageFrequencies()
+    // this.sortByFrequency();
     this.separateSelf();
     if (this.matchTones) {
       this.filterByToneMatching();
