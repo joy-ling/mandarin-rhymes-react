@@ -15,7 +15,7 @@ function App() {
   const [matchTones, setMatchTones] = useState(false);
 
   const fetchRhymes = async () => {
-    const res = await axios.post('http://localhost:3001/rhymes', {
+    const res = await axios.post('/api/rhymes', {
       hanzi: input,
       matchTones
     });
