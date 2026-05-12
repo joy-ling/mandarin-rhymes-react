@@ -2,6 +2,7 @@ import pinyinConvert from 'hanzi-to-pinyin';
 import zhuyin from 'zhuyin';
 import hanziFrequency from '@zurawiki/hanzi';
 import fs from 'fs';
+import crypto from 'crypto';
 
 const rhymingDictionary = JSON.parse(
   fs.readFileSync(new URL('./rhyming-dictionary.json', import.meta.url), 'utf-8')
@@ -110,10 +111,6 @@ class MandarinRhymes {
       } else {
         subDictionary = subDictionary[vowel]
       }
-      console.log({
-        input: this.input.toneNumberArray,
-        word: word.toneNumberArray
-      });
     }
     this.rhymes = subDictionary.words || [];
     this.addAverageFrequencies()

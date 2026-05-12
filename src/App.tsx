@@ -15,10 +15,7 @@ function App() {
   const [matchTones, setMatchTones] = useState(false);
 
   const fetchRhymes = async () => {
-    const API_BASE =
-      import.meta.env.VITE_API_URL || '';
-
-    const res = await axios.post(`${API_BASE}/api/rhymes`, {
+    const res = await axios.post(`/api/rhymes`, {
       hanzi: input,
       matchTones
     });
