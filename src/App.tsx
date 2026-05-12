@@ -4,7 +4,13 @@ import './App.css';
 
 function App() {
   const [input, setInput] = useState('');
-  const [rhymes, setRhymes] = useState([]);
+  const [rhymes, setRhymes] = useState<Array<{
+    id: string;
+    simplified: string;
+    traditional: string;
+    pinyin: string;
+    definitions: string;
+  }>>([]);
   const [self, setSelf] = useState(null);
   const [matchTones, setMatchTones] = useState(false);
 
