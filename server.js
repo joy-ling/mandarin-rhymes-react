@@ -20,7 +20,7 @@ app.post('/rhymes', async (req, res) => {
     const { hanzi } = req.body;
     console.log("2️⃣ hanzi:", hanzi);
 
-    const rhymes = new MandarinRhymes(hanzi);
+    const rhymes = new MandarinRhymes(hanzi).withToneMatching();;
     console.log("3️⃣ instance created");
 
     const result = await rhymes.getRhymes();

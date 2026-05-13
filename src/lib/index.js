@@ -78,6 +78,7 @@ class MandarinRhymes {
   }
 
   async getRhymes() {
+    console.log("⚠️ matchTones:", this.matchTones);
     try {
       console.log("🟡 [A] Starting getRhymes for:", this.hanzi);
 
@@ -86,7 +87,7 @@ class MandarinRhymes {
 
       // returns array like: [ ['ni3'] ]
       const pinyinResult = pinyin(this.hanzi, {
-        style: pinyin.STYLE_TONE2 // numbered tones (ni3)
+        style: pinyinLib.STYLE_TONE // numbered tones (ni3)
       });
 
       console.log("🟢 [B] pinyinResult:", pinyinResult);
@@ -133,6 +134,29 @@ class MandarinRhymes {
 
       // ---- STEP 7: separate self ----
       this.separateSelf();
+
+      if (this.self) {
+        const pinyinResult = pinyin(this.self.simplified, {
+          style: pinyinLib.STYLE_TONE
+        });
+
+        const pinyinArray = pinyinResult.map(item => item[0]);
+
+        this.self.toneNumberArray = this.getToneNumberArray(pinyinArray);
+      }
+
+      this.rhymes = this.rhymes.map(word => {
+        const pinyinResult = pinyin(word.simplified, {
+          style: pinyinLib.STYLE_TONE
+        });
+
+        const pinyinArray = pinyinResult.map(item => item[0]);
+
+        return {
+          ...word,
+          toneNumberArray: this.getToneNumberArray(pinyinArray)
+        };
+      });
 
       // ---- STEP 8: tone filtering ----
       if (this.matchTones) {
@@ -311,6 +335,7 @@ class MandarinRhymes {
     });
     this.rhymes = newRhymes;
   }
+  
 
   withToneMatching() {
     this.matchTones = true;
