@@ -1,4 +1,5 @@
-import pinyinConvert from 'hanzi-to-pinyin';
+// import pinyinConvert from 'hanzi-to-pinyin';
+import pinyinLib from 'pinyin';
 import zhuyin from 'zhuyin';
 import hanziFrequency from '@zurawiki/hanzi';
 import fs from 'fs';
@@ -8,6 +9,7 @@ const rhymingDictionary = JSON.parse(
   fs.readFileSync(new URL('./rhyming-dictionary.json', import.meta.url), 'utf-8')
 );
 
+const pinyin = pinyinLib.default;
 const zhuyinify = zhuyin.default;
 
 // used to remove smybols which do not contribute to rhyming
@@ -76,70 +78,93 @@ class MandarinRhymes {
   }
 
   async getRhymes() {
-    // convert hanzi to pinyin w/ tone numbers
-    var pinyinNumeric = await pinyinConvert(this.hanzi, {
-      numbered: true
-    });
-    // get information from hanzi
-    var pinyinNumericArray = [];
-    pinyinNumeric.forEach(element => {
-      if (Array.isArray(element)) {
-        pinyinNumericArray.push(element[0]);
-      } else {
-        pinyinNumericArray.push(...element.split(" ").filter(syllable => syllable != ""));
+    try {
+      console.log("🟡 [A] Starting getRhymes for:", this.hanzi);
+
+      // ---- STEP 1: pinyin conversion (with timeout) ----
+      console.log("🟡 [A] Starting getRhymes for:", this.hanzi);
+
+      // returns array like: [ ['ni3'] ]
+      const pinyinResult = pinyin(this.hanzi, {
+        style: pinyin.STYLE_TONE2 // numbered tones (ni3)
+      });
+
+      console.log("🟢 [B] pinyinResult:", pinyinResult);
+
+      // flatten it
+      const pinyinNumericArray = pinyinResult.map(item => item[0]);
+
+      console.log("🟢 [C] pinyinNumericArray:", pinyinNumericArray);
+
+      // ---- STEP 3: zhuyin ----
+      const zhuyinArray = this.getZhuyinArray(pinyinNumericArray);
+      console.log("🟢 [D] zhuyinArray:", zhuyinArray);
+
+      // ---- STEP 4: tones ----
+      const toneNumberArray = this.getToneNumberArray(pinyinNumericArray);
+      console.log("🟢 [E] toneNumberArray:", toneNumberArray);
+
+      this.input = { toneNumberArray };
+
+      // ---- STEP 5: vowels ----
+      const vowelArray = this.getVowelArray(zhuyinArray);
+      console.log("🟢 [F] vowelArray:", vowelArray);
+
+      // ---- STEP 6: dictionary traversal ----
+      let subDictionary = rhymingDictionary;
+
+      for (let v = 0; v < vowelArray.length; v++) {
+        const vowel = vowelArray[v];
+
+        if (!subDictionary || !subDictionary[vowel]) {
+          console.log("🟠 [G] No match for vowel:", vowel);
+          return {
+            self: null,
+            rhymes: []
+          };
+        }
+
+        subDictionary = subDictionary[vowel];
       }
-    });
 
-    var zhuyinArray = this.getZhuyinArray(pinyinNumericArray);
-    var toneNumberArray = this.getToneNumberArray(pinyinNumericArray);
-    this.input = {
-      toneNumberArray
-    };
-    var vowelArray = this.getVowelArray(zhuyinArray);
+      console.log("🟢 [H] Dictionary hit");
 
-    var subDictionary = rhymingDictionary;
-    // loop through vowels
-    for (var v = 0; v < vowelArray.length; v++) {
-      var vowel = vowelArray[v]
-      var tone = toneNumberArray[v];
-      // if there is no a Subdirectory under this vowel
-      if (!(subDictionary && subDictionary[vowel])) {
-        return {
-          self: this.self,
-          rhymes: []
-        };
-      } else {
-        subDictionary = subDictionary[vowel]
+      this.rhymes = subDictionary.words || [];
+
+      // ---- STEP 7: separate self ----
+      this.separateSelf();
+
+      // ---- STEP 8: tone filtering ----
+      if (this.matchTones) {
+        this.filterByToneMatching();
       }
-    }
-    this.rhymes = subDictionary.words || [];
-    // this.addAverageFrequencies()
-    // this.sortByFrequency();
-    this.separateSelf();
-    if (this.matchTones) {
-      this.filterByToneMatching();
-    }
-    // reset syntactic sugar fields to initial value for use in subsequent calls
-    this.matchTones = false;
 
-    // Convert definitions arrays to strings for easier display
-    this.rhymes = this.rhymes.map(word => {
-      return {
+      this.matchTones = false;
+
+      // ---- STEP 9: format output ----
+      this.rhymes = this.rhymes.map(word => ({
         ...word,
         id: generateWordId(word),
-        definitions: Array.isArray(word.definitions) ? word.definitions.join('; ') : word.definitions
+        definitions: Array.isArray(word.definitions)
+          ? word.definitions.join("; ")
+          : word.definitions
+      }));
+
+      if (this.self?.definitions && Array.isArray(this.self.definitions)) {
+        this.self.definitions = this.self.definitions.join("; ");
+      }
+
+      console.log("🟢 [I] Finished successfully");
+
+      return {
+        self: this.self || null,
+        rhymes: this.rhymes
       };
-    });
 
-    // Also convert self definitions
-    if (this.self.definitions && Array.isArray(this.self.definitions)) {
-      this.self.definitions = this.self.definitions.join('; ');
+    } catch (err) {
+      console.error("🔥 getRhymes FAILED:", err);
+      throw err; // let Express handle it
     }
-
-    return {
-      self: this.self,
-      rhymes: this.rhymes
-    };
   }
 
   // helper methods

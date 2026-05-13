@@ -15,6 +15,7 @@
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "hanzi-to-pinyin": "^1.36.0",
+    "pinyin": "^4.0.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "vercel": "^53.4.0",
@@ -32,6 +33,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
     "mocha": "^6.0.2",
+    "nodemon": "^3.1.14",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
     "vite": "^8.0.12"

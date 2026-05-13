@@ -26,3 +26,6 @@ dist-ssr
 .env*.local
 /cedict_db
 *.ldb
+/postman
+/.postman
+/cedict_db
