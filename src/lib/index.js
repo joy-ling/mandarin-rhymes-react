@@ -12,6 +12,15 @@ const rhymingDictionary = JSON.parse(
 const pinyin = pinyinLib.default;
 const zhuyinify = zhuyin.default;
 
+const toneMap = {
+  ā: 1, á: 2, ǎ: 3, à: 4,
+  ē: 1, é: 2, ě: 3, è: 4,
+  ī: 1, í: 2, ǐ: 3, ì: 4,
+  ō: 1, ó: 2, ǒ: 3, ò: 4,
+  ū: 1, ú: 2, ǔ: 3, ù: 4,
+  ǖ: 1, ǘ: 2, ǚ: 3, ǜ: 4,
+};
+
 // used to remove smybols which do not contribute to rhyming
 const SYMBOLS_ARRAY = [",", "·"];
 
@@ -72,44 +81,34 @@ function generateWordId(word) {
 }
 
 class MandarinRhymes {
-  constructor(hanzi) {
+  constructor(hanzi, matchTones = false) {
     this.hanzi = hanzi;
-    this.matchTones = false;
+    this.matchTones = matchTones;
   }
 
   async getRhymes() {
     console.log("⚠️ matchTones:", this.matchTones);
     try {
-      console.log("🟡 [A] Starting getRhymes for:", this.hanzi);
 
       // ---- STEP 1: pinyin conversion (with timeout) ----
-      console.log("🟡 [A] Starting getRhymes for:", this.hanzi);
-
-      // returns array like: [ ['ni3'] ]
       const pinyinResult = pinyin(this.hanzi, {
-        style: pinyinLib.STYLE_TONE // numbered tones (ni3)
+        style: pinyinLib.STYLE_TONE2 // numbered tones (ni3)
       });
-
-      console.log("🟢 [B] pinyinResult:", pinyinResult);
 
       // flatten it
       const pinyinNumericArray = pinyinResult.map(item => item[0]);
 
-      console.log("🟢 [C] pinyinNumericArray:", pinyinNumericArray);
-
       // ---- STEP 3: zhuyin ----
       const zhuyinArray = this.getZhuyinArray(pinyinNumericArray);
-      console.log("🟢 [D] zhuyinArray:", zhuyinArray);
 
       // ---- STEP 4: tones ----
       const toneNumberArray = this.getToneNumberArray(pinyinNumericArray);
-      console.log("🟢 [E] toneNumberArray:", toneNumberArray);
 
-      this.input = { toneNumberArray };
-
+      const inputToneNumberArray = this.getToneNumberArray(pinyinNumericArray);
+      this.inputToneNumberArray = inputToneNumberArray;
+      
       // ---- STEP 5: vowels ----
       const vowelArray = this.getVowelArray(zhuyinArray);
-      console.log("🟢 [F] vowelArray:", vowelArray);
 
       // ---- STEP 6: dictionary traversal ----
       let subDictionary = rhymingDictionary;
@@ -118,7 +117,6 @@ class MandarinRhymes {
         const vowel = vowelArray[v];
 
         if (!subDictionary || !subDictionary[vowel]) {
-          console.log("🟠 [G] No match for vowel:", vowel);
           return {
             self: null,
             rhymes: []
@@ -128,7 +126,6 @@ class MandarinRhymes {
         subDictionary = subDictionary[vowel];
       }
 
-      console.log("🟢 [H] Dictionary hit");
 
       this.rhymes = subDictionary.words || [];
 
@@ -137,7 +134,7 @@ class MandarinRhymes {
 
       if (this.self) {
         const pinyinResult = pinyin(this.self.simplified, {
-          style: pinyinLib.STYLE_TONE
+          style: pinyinLib.STYLE_TONE2
         });
 
         const pinyinArray = pinyinResult.map(item => item[0]);
@@ -147,7 +144,7 @@ class MandarinRhymes {
 
       this.rhymes = this.rhymes.map(word => {
         const pinyinResult = pinyin(word.simplified, {
-          style: pinyinLib.STYLE_TONE
+          style: pinyinLib.STYLE_TONE2
         });
 
         const pinyinArray = pinyinResult.map(item => item[0]);
@@ -163,8 +160,6 @@ class MandarinRhymes {
         this.filterByToneMatching();
       }
 
-      this.matchTones = false;
-
       // ---- STEP 9: format output ----
       this.rhymes = this.rhymes.map(word => ({
         ...word,
@@ -178,16 +173,13 @@ class MandarinRhymes {
         this.self.definitions = this.self.definitions.join("; ");
       }
 
-      console.log("🟢 [I] Finished successfully");
-
       return {
         self: this.self || null,
         rhymes: this.rhymes
       };
 
     } catch (err) {
-      console.error("🔥 getRhymes FAILED:", err);
-      throw err; // let Express handle it
+      throw err;
     }
   }
 
@@ -197,8 +189,10 @@ class MandarinRhymes {
   }
 
   matchesSelfTones(word) {
+    if (!this.inputToneNumberArray) return true;
+
     for (let i = 0; i < word.toneNumberArray.length; i++) {
-      if (word.toneNumberArray[i] != this.input.toneNumberArray[i]) {
+      if (word.toneNumberArray[i] !== this.inputToneNumberArray[i]) {
         return false;
       }
     }
@@ -239,12 +233,17 @@ class MandarinRhymes {
   }
 
   getToneNumberArray(pinyinArray) {
-    return pinyinArray.map(pinyin => {
-      var tone = pinyin[pinyin.length - 1];
-      var numbers = /^[0-9]+$/;
-      // used to sanitize pinyin representation of certain words which contain English letters
-      // e.g. A咖 where the A is not marked with any number 1-5 for tone, but is generally read as 1st tone
-      return tone.match(numbers) ? tone : 1;
+    return pinyinArray.map(syllable => {
+      console.log("syllable:", syllable);
+
+      for (const char of syllable) {
+        if (toneMap[char]) {
+          return toneMap[char];
+        }
+      }
+
+      // no marked vowel → neutral tone
+      return 5;
     });
   }
 
