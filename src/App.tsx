@@ -27,7 +27,7 @@ function App() {
   return (
     <main>
       <h1>Mandarin Rhyming Dictionary</h1>
-      <p className="instructions">Please enter hanzi, such as 海</p>
+      <p className="instructions">Please enter a Chinese character such as 海 or 你</p>
 
 
       <div className="search">

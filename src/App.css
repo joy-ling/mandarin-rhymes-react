@@ -136,6 +136,10 @@ footer {
 }
 
 @media (max-width: 600px) {
+  h1 {
+    line-height: 2rem;
+  }
+
   .header {
     display: none;
   }
@@ -160,5 +164,13 @@ footer {
   .cell-label {
     display: block;
     font-size: 0.75rem;
+  }
+
+  .find-rhymes {
+    font-size: 1.25rem;
+  }
+
+  .match-tones {
+    font-size: 1.25rem;
   }
 }
