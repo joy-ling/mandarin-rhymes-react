@@ -196,13 +196,19 @@ footer {
 
   .row {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 
   .cell {
     display: flex;
     flex-direction: column;
     margin-bottom: 0.75rem;
+    flex-basis: 33%;
+  }
+
+  .cell:last-child {
+    flex-basis: 100%;
   }
 
   .cell-label {
