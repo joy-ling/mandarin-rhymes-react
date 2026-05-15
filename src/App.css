@@ -176,6 +176,10 @@ footer {
     }
   }
 
+  .please-donate {
+    background-color: var(--dark-grey);
+  }
+
   .rhyme-list {
     background-color: var(--dark-grey);
     color: white;
