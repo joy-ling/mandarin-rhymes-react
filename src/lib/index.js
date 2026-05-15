@@ -87,7 +87,21 @@ class MandarinRhymes {
   }
 
   async getRhymes() {
-    console.log("⚠️ matchTones:", this.matchTones);
+    const isChinese = /^[\u4e00-\u9fff]+$/.test(this.hanzi);
+
+    const messageText = {
+      title: "No results.",
+      body: "Are you sure you submitted a Chinese character?"
+    };
+
+    if (!this.hanzi || !isChinese) {
+      return {
+        self: null,
+        rhymes: [],
+        message: messageText
+      };
+    }
+
     try {
 
       // ---- STEP 1: pinyin conversion (with timeout) ----
@@ -97,6 +111,14 @@ class MandarinRhymes {
 
       // flatten it
       const pinyinNumericArray = pinyinResult.map(item => item[0]);
+
+      if (!pinyinNumericArray.length || !pinyinNumericArray[0]) {
+        return {
+          self: null,
+          rhymes: [],
+          message: messageText
+        };
+      }
 
       // ---- STEP 3: zhuyin ----
       const zhuyinArray = this.getZhuyinArray(pinyinNumericArray);
@@ -119,7 +141,8 @@ class MandarinRhymes {
         if (!subDictionary || !subDictionary[vowel]) {
           return {
             self: null,
-            rhymes: []
+            rhymes: [],
+            message: messageText
           };
         }
 
@@ -128,6 +151,14 @@ class MandarinRhymes {
 
 
       this.rhymes = subDictionary.words || [];
+
+      if (!this.rhymes.length) {
+        return {
+          self: null,
+          rhymes: [],
+          message: messageText
+        };
+      }
 
       // ---- STEP 7: separate self ----
       this.separateSelf();
@@ -175,7 +206,8 @@ class MandarinRhymes {
 
       return {
         self: this.self || null,
-        rhymes: this.rhymes
+        rhymes: this.rhymes,
+        message: null
       };
 
     } catch (err) {
@@ -234,8 +266,6 @@ class MandarinRhymes {
 
   getToneNumberArray(pinyinArray) {
     return pinyinArray.map(syllable => {
-      console.log("syllable:", syllable);
-
       for (const char of syllable) {
         if (toneMap[char]) {
           return toneMap[char];

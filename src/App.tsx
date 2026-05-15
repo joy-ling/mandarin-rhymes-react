@@ -13,6 +13,7 @@ function App() {
   }>>([]);
   const [self, setSelf] = useState(null);
   const [matchTones, setMatchTones] = useState(false);
+  const [message, setMessage] = useState('');
 
   const fetchRhymes = async () => {
     const res = await axios.post(`http://localhost:3001/rhymes`, {
@@ -22,13 +23,13 @@ function App() {
 
     setRhymes(res.data.rhymes);
     setSelf(res.data.self);
+    setMessage(res.data.message || '');
   };
 
   return (
     <main>
       <h1>Mandarin Rhyming Dictionary</h1>
       <p className="instructions">Please enter a Chinese character such as 海 or 你</p>
-
 
       <div className="search">
         <input
@@ -53,8 +54,14 @@ function App() {
 
       </div>
 
+      {message && (
+        <div className="message">
+          <h2>{message.title}</h2>
+          <p>{message.body}</p>
+        </div>
+      )}
 
-      {self && (
+      {!message && self && (
         <div className="rhyme-list">
           <div className="header">
             <div>Simplified</div>
