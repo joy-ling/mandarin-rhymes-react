@@ -13,7 +13,12 @@ function App() {
   }>>([]);
   const [self, setSelf] = useState(null);
   const [matchTones, setMatchTones] = useState(false);
-  const [message, setMessage] = useState('');
+
+  type Message = {
+    title: string;
+    body: string;
+  };
+  const [message, setMessage] = useState<Message | null>(null);
 
   const fetchRhymes = async () => {
     const API_BASE =
@@ -26,7 +31,7 @@ function App() {
 
     setRhymes(res.data.rhymes);
     setSelf(res.data.self);
-    setMessage(res.data.message || '');
+    setMessage(res.data.message || null);
   };
 
   return (
