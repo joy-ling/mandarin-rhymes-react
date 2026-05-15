@@ -1,5 +1,7 @@
 :root {
   --mid-grey: #cccccc;
+  --dark-grey: #3b3b3b;
+  --almost-black: #1e1e1e;
   --mid-red: #e04a4a;
   --dark-red: #A81414;
   --light-yellow: #fff9ed;
@@ -139,6 +141,33 @@ main {
 
 footer { 
   padding: 3rem 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  body::before {
+    background-image: none;
+  }
+
+  h2, p, label, footer {
+    color: white;
+
+    a {
+      color: var(--mid-red);
+    }
+  }
+
+  .rhyme-list {
+    background-color: var(--dark-grey);
+    color: white;
+  }
+
+  .row:nth-child(odd) {
+    background: var(--almost-black);
+  }
+
+  .header {
+    background-color: var(--dark-red);
+  }
 }
 
 @media (max-width: 600px) {
