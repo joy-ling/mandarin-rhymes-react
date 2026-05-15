@@ -9,11 +9,11 @@ app.use(express.json());
 
 console.log("Server booting");
 
-app.get('/rhymes', (req, res) => {
+app.get('/api/rhymes', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.post('/rhymes', async (req, res) => {
+app.post('/api/rhymes', async (req, res) => {
   try {
 
     const { hanzi, matchTones } = req.body;

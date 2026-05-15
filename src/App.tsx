@@ -16,7 +16,10 @@ function App() {
   const [message, setMessage] = useState('');
 
   const fetchRhymes = async () => {
-    const res = await axios.post(`http://localhost:3001/rhymes`, {
+    const API_BASE =
+      import.meta.env.VITE_API_URL || '';
+
+    const res = await axios.post(`${API_BASE}/api/rhymes`, {
       hanzi: input,
       matchTones
     });
@@ -29,7 +32,7 @@ function App() {
   return (
     <main>
       <h1>Mandarin Rhyming Dictionary</h1>
-      <p className="instructions">Please enter a Chinese character such as 海 or 你</p>
+      <p className="instructions">Please enter a Chinese character such as 海 or 朋友</p>
 
       <div className="search">
         <input

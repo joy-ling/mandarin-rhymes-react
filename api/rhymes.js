@@ -8,8 +8,7 @@ export default async function handler(req, res) {
   try {
     const { hanzi, matchTones } = req.body;
 
-    const rhymes = new MandarinRhymes(hanzi);
-    if (matchTones) rhymes.withToneMatching();
+    const rhymes = new MandarinRhymes(hanzi, matchTones);
 
     const result = await rhymes.getRhymes();
 
