@@ -121,7 +121,7 @@ function App() {
       )}
 
       <footer>
-        Copyright © <a href="https://joychiangling.com" target="_blank">Joy Ling</a>
+        Made by <a href="https://joychiangling.com" target="_blank">Joy Ling</a>
       </footer>
 
     </main>
