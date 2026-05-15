@@ -121,7 +121,8 @@ function App() {
       )}
 
       <footer>
-        Made by <a href="https://joychiangling.com" target="_blank">Joy Ling</a>
+        <p>Made by <a href="https://joychiangling.com" target="_blank">Joy Ling</a></p>
+        <p>Based on <a href="https://github.com/daddehs1/mandarin-rhymes" target="_blank">mandarin-rhymes</a></p>
       </footer>
 
     </main>
