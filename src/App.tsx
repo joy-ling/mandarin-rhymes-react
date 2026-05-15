@@ -19,19 +19,32 @@ function App() {
     body: string;
   };
   const [message, setMessage] = useState<Message | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchRhymes = async () => {
+    setLoading(true);
+    setMessage(null);
+
     const API_BASE =
       import.meta.env.VITE_API_URL || '';
 
-    const res = await axios.post(`${API_BASE}/api/rhymes`, {
-      hanzi: input,
-      matchTones
-    });
+      try {
+        const res = await axios.post(`${API_BASE}/api/rhymes`, {
+          hanzi: input,
+          matchTones
+        });
 
-    setRhymes(res.data.rhymes);
-    setSelf(res.data.self);
-    setMessage(res.data.message || null);
+        setRhymes(res.data.rhymes);
+        setSelf(res.data.self);
+        setMessage(res.data.message || null);
+      } catch (err) {
+        setMessage({
+          title: "Error",
+          body: "Something went wrong. Please try again."
+        });
+      } finally {
+        setLoading(false);    // 🔥 always stop loading
+      }
   };
 
   return (
@@ -62,14 +75,20 @@ function App() {
 
       </div>
 
-      {message && (
+      {loading && (
+        <div className="message">
+          <p>Loading...</p>
+        </div>
+      )}
+
+      {!loading && message && (
         <div className="message">
           <h2>{message.title}</h2>
           <p>{message.body}</p>
         </div>
       )}
 
-      {!message && self && (
+      {!loading && !message && self && (
         <div className="rhyme-list">
           <div className="header">
             <div>Simplified</div>

@@ -87,20 +87,25 @@ class MandarinRhymes {
   }
 
   async getRhymes() {
-    const isChinese = /^[\u4e00-\u9fff]+$/.test(this.hanzi);
+    const cleanedInput = this.hanzi
+    ?.trim()
+    .replace(/\s+/g, '');
+    const isChinese = /^\p{Script=Han}+$/u.test(cleanedInput);
 
     const messageText = {
       title: "No results.",
       body: "Are you sure you submitted a Chinese character?"
     };
 
-    if (!this.hanzi || !isChinese) {
+    if (!cleanedInput || !isChinese) {
       return {
         self: null,
         rhymes: [],
         message: messageText
       };
     }
+
+    this.hanzi = cleanedInput;
 
     try {
 
