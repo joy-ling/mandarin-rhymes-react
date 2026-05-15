@@ -52,6 +52,11 @@ function App() {
       <h1>Mandarin Rhyming Dictionary</h1>
       <p className="instructions">Please enter a Chinese character such as 海 or 朋友</p>
 
+      <div className="please-donate">
+        <p>Find this tool useful? Please donate to support maintenance and hosting costs.</p>
+        <a className="btn btn--red" href="https://paypal.me/joychiangling" target="_blank">Donate</a>
+      </div>
+
       <div className="search">
         <input
           className="search-bar"
@@ -70,7 +75,7 @@ function App() {
             Match tones
           </label>
 
-          <button className="find-rhymes" onClick={fetchRhymes}>Find Rhymes</button>
+          <button className="btn btn--red find-rhymes" onClick={fetchRhymes}>Find Rhymes</button>
         </div>
 
       </div>

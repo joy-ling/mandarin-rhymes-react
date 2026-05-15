@@ -8,6 +8,26 @@
   --mid-yellow: #f3d186;
 }
 
+.btn {
+  font-size: 1rem;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  width: max-content;
+}
+
+.btn:hover {
+  filter: brightness(0.75);
+}
+
+.btn--red {
+  background: var(--dark-red);
+  color: white;
+}
+
 body {
   a {
     color: var(--dark-red);
@@ -46,6 +66,19 @@ main {
   margin: 1rem 0;
 }
 
+.please-donate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background-color: var(--light-yellow);
+  padding: 2rem 0;
+  margin: 1rem 0;
+  border-radius: 1rem;
+  box-shadow: 0px 4px 8px 0px #00000033;
+}
+
 .search {
   display: flex;
   flex-direction: column;
@@ -80,21 +113,6 @@ main {
     border: 1px solid var(--mid-grey);
   }
   
-}
-
-.find-rhymes {
-  background: var(--dark-red);
-  color: white;
-  font-size: 1rem;
-  border: none;
-  padding: 0.75rem 2rem;
-  border-radius: 2rem;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.find-rhymes:hover {
-  filter: brightness(0.75);
 }
 
 .rhyme-list {
