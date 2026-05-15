@@ -168,6 +168,10 @@ footer {
   .header {
     background-color: var(--dark-red);
   }
+
+  .message {
+    background-color: var(--almost-black);
+  }
 }
 
 @media (max-width: 600px) {
