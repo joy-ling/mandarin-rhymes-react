@@ -236,11 +236,18 @@ footer {
     flex-direction: column;
     padding: 1rem;
     width: 100%;
+    gap: 1rem;
+  }
+
+  .please-donate__image {
+    width: 75px;
+    height: 75px;
   }
 
   .please-donate__text {
     align-items: center;
     justify-content: center;
+    text-align: center;
   }
 
   .rhyme-list {
