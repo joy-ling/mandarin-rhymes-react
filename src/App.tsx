@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import './App.css';
+import cat from './assets/lucky-cat-head.svg';
 
 function App() {
   const [input, setInput] = useState('');
@@ -53,8 +54,12 @@ function App() {
       <p className="instructions">Please enter a Chinese character such as 海 or 朋友</p>
 
       <div className="please-donate">
-        <p>Find this tool useful? Please donate to support maintenance and hosting costs.</p>
-        <a className="btn btn--red" href="https://paypal.me/joychiangling" target="_blank">Donate</a>
+        <img className="please-donate__image" width={125} height={125} src={cat} alt="Lucky cat" />
+        <div className="please-donate__text">
+          <h2>Find this tool useful?</h2>
+          <p>Please donate to support maintenance and hosting costs.</p>
+          <a className="btn btn--red" href="https://paypal.me/joychiangling" target="_blank">Donate</a>
+        </div>
       </div>
 
       <div className="search">
